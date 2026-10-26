@@ -2,20 +2,8 @@
 
 A terminal dashboard showing the CI status of **your open GitHub pull requests**, refreshed automatically.
 
-```
- GitHub PR Check   @you  ·  3 open PRs  ·  1 failing  ·  1 running  ·  1 passed
-┌ Open pull requests ─────────────────────────────────────────────────────────────────────────┐
-│    PR                    Title                Checks                    Done        ETA     │
-│▌⠹  acme/api#412          Add rate limiting    ██████████████▓▓▓▓░░░░░░  7/12   58%  ~1m40s  │
-│ ✗  acme/web#88           Fix login redirect   ████████████████████████  9/9   100%          │
-│ ✓  you/tally#227         New header layout    ████████████████████████  4/4   100%          │
-└─────────────────────────────────────────────────────────────────────────────────────────────┘
-┌ acme/api#412 — Add rate limiting ───────────────────────────────────────────────────────────┐
-│ ⠹  e2e (chrome)  · step 5/7: Run Cypress · ~62% · 1m10s left       running   1m55s           │
-│ ◌  deploy-preview                                                   queued                   │
-│ ✓  lint                                                             passed   0m31s           │
-└─────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![GitHub PR Check showing an open pull request with all CI checks passed](preview.png)
+
 
 For every open PR you authored, in any repo or organization your token can see, it shows:
 
