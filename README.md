@@ -105,11 +105,25 @@ Grab the archive for your platform from the repository's **Releases** page:
 
 Unpack it and put `github-pr-check` (`github-pr-check.exe` on Windows) somewhere on your `PATH`. The Linux binaries are fully static and work on any distribution. `SHA256SUMS.txt` lists checksums for verifying the downloads.
 
-- **macOS:** the binary isn't signed, so Gatekeeper blocks it the first time. Clear the quarantine flag once:
-  ```sh
-  xattr -d com.apple.quarantine ./github-pr-check
-  ```
 - **Linux / macOS:** if needed, make it executable with `chmod +x github-pr-check`.
+
+#### macOS: allowing the app to run
+
+The binary isn't signed or notarized by Apple, so the first launch of a downloaded copy is blocked with a message like *"github-pr-check" Not Opened* or *Apple could not verify "github-pr-check" is free of malware*. Click **Done** (not *Move to Trash*), then allow it once:
+
+1. Open **System Settings → Privacy & Security**.
+2. Scroll down to the **Security** section. It shows *"github-pr-check" was blocked to protect your Mac.*
+3. Click **Open Anyway** and confirm with your password or Touch ID.
+4. Run the app again and click **Open Anyway** in the dialog that follows.
+
+After that, macOS remembers the choice for this copy. Repeat these steps after downloading a new version.
+
+The **Open Anyway** button only appears for about an hour after the blocked launch. If it isn't there, run the app again first.
+
+**Alternative (Terminal):** remove the quarantine flag that macOS adds to downloaded files, and the app runs without any prompt:
+```sh
+xattr -d com.apple.quarantine ./github-pr-check
+```
 
 ### Or build from source
 
