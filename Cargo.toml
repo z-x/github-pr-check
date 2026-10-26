@@ -1,0 +1,17 @@
+[package]
+name = "github-pr-check"
+version = "0.1.0"
+edition = "2021"
+description = "Terminal dashboard for the CI status of your open GitHub pull requests"
+
+[dependencies]
+ratatui = "0.29"
+# rustls with bundled root certificates: no OpenSSL dependency, so Linux builds can be fully static.
+ureq = { version = "2", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", default-features = false, features = ["clock", "serde", "std"] }
+
+[profile.release]
+strip = true
+lto = true
