@@ -3,6 +3,7 @@ mod github;
 mod ui;
 
 use std::io;
+use std::path::{Path, PathBuf};
 use std::process::{Command, ExitCode, Stdio};
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::time::Duration;
@@ -29,10 +30,14 @@ OPTIONS:
     -h, --help                 Show this help
 
 The token is read from GITHUB_PAT, GITHUB_TOKEN or GH_TOKEN, either from the
-environment or from a .env file in the current directory.";
+environment or from a .env file in the current directory or next to the
+executable (the current directory wins).";
 
 fn main() -> ExitCode {
-    load_dotenv(".env");
+    let env_files = dotenv_candidates();
+    for path in &env_files {
+        load_dotenv(path);
+    }
 
     let (interval, once) = match parse_args() {
         Ok(Some(args)) => args,
@@ -50,7 +55,12 @@ fn main() -> ExitCode {
         .iter()
         .find_map(|k| std::env::var(k).ok().filter(|v| !v.trim().is_empty()))
     else {
-        eprintln!("error: no GitHub token found. Set GITHUB_PAT (or GITHUB_TOKEN / GH_TOKEN) or add it to .env");
+        eprintln!("error: no GitHub token found. Set GITHUB_PAT (or GITHUB_TOKEN / GH_TOKEN) or add it to a .env file.");
+        eprintln!("Looked for .env in:");
+        for path in &env_files {
+            let status = if path.is_file() { "found, but no token variable in it" } else { "not found" };
+            eprintln!("  {} ({status})", path.display());
+        }
         return ExitCode::FAILURE;
     };
 
@@ -165,9 +175,35 @@ fn parse_args() -> Result<Option<(Duration, bool)>, String> {
     Ok(Some((Duration::from_secs(secs.max(5)), once)))
 }
 
-/// Minimal .env loader: KEY=VALUE lines, optional quotes, `#` comments. Never overrides real env vars.
-fn load_dotenv(path: &str) {
+/// `.env` in the current directory, then next to the executable (symlinks resolved, e.g. Homebrew-style
+/// links in /usr/local/bin). Launching from Finder or by full path makes these differ.
+fn dotenv_candidates() -> Vec<PathBuf> {
+    let mut paths = vec![std::env::current_dir().unwrap_or_default().join(".env")];
+    let exe = std::env::current_exe();
+    #[cfg(unix)]
+    let exe = exe.and_then(std::fs::canonicalize);
+    let exe_dir = exe.ok().and_then(|p| p.parent().map(|d| d.join(".env")));
+    if let Some(p) = exe_dir {
+        if !paths.iter().any(|existing| same_file(existing, &p)) {
+            paths.push(p);
+        }
+    }
+    paths
+}
+
+fn same_file(a: &Path, b: &Path) -> bool {
+    match (std::fs::canonicalize(a), std::fs::canonicalize(b)) {
+        (Ok(a), Ok(b)) => a == b,
+        _ => a == b,
+    }
+}
+
+/// Minimal .env loader: KEY=VALUE lines, optional quotes, `#` comments. Never overrides real env vars,
+/// so earlier files take precedence over later ones.
+fn load_dotenv(path: &Path) {
     let Ok(contents) = std::fs::read_to_string(path) else { return };
+    // Editors on Windows may prepend a UTF-8 BOM, which would otherwise end up in the first key.
+    let contents = contents.trim_start_matches('\u{feff}');
     for line in contents.lines() {
         let line = line.trim();
         if line.is_empty() || line.starts_with('#') {

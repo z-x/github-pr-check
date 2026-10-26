@@ -64,13 +64,13 @@ Create one at **https://github.com/settings/personal-access-tokens/new** with th
 
 github-pr-check checks these variables, in order: **`GITHUB_PAT`**, `GITHUB_TOKEN`, `GH_TOKEN`.
 
-**Option A: a `.env` file** in the directory you run github-pr-check from:
+**Option A: a `.env` file**, either **next to the github-pr-check binary** or in the directory you run it from:
 
 ```
 GITHUB_PAT=ghp_yourTokenHere
 ```
 
-`.env` is in `.gitignore`, so it won't be committed. Real environment variables take precedence over values in `.env`.
+If both exist, the one in the current directory wins. Real environment variables take precedence over any `.env`. If no token is found, the error message lists every path that was checked. `.env` is in `.gitignore`, so it won't be committed.
 
 **Option B: an environment variable.** This is better if you install github-pr-check globally and run it from anywhere.
 
@@ -127,7 +127,7 @@ Run it from the project directory:
 cargo run --release
 ```
 
-Or install it as a command you can run from anywhere. Because `.env` is read from the current directory, use option B for the token in that case:
+Or install it as a command you can run from anywhere. `cargo install` puts the binary in `~/.cargo/bin`, so either put `.env` there or use option B:
 
 ```sh
 cargo install --path .

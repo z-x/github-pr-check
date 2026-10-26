@@ -1,6 +1,6 @@
 [package]
 name = "github-pr-check"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Terminal dashboard for the CI status of your open GitHub pull requests"
 
