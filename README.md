@@ -2,7 +2,7 @@
 
 A terminal dashboard showing the CI status of **your open GitHub pull requests**, refreshed automatically.
 
-![GitHub PR Check showing an open pull request with all CI checks passed](preview.png)
+![GitHub PR Check listing three open pull requests with live CI progress, one failing and showing its per-check breakdown](preview.png)
 
 
 For every open PR you authored, in any repo or organization your token can see, it shows:
