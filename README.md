@@ -87,6 +87,11 @@ brew install z-x/tap/github-pr-check
 ```
 Homebrew installs the same prebuilt binary as the Releases page, without the macOS *"Apple could not verify…"* prompt described below.
 
+**macOS / Linux ([mise](https://mise.jdx.dev)):** installs the binary straight from this repository's Releases:
+```sh
+mise use -g github:z-x/github-pr-check
+```
+
 **With Rust installed ([crates.io](https://crates.io/crates/github-pr-check)):**
 ```sh
 cargo install github-pr-check     # builds from source
@@ -111,9 +116,14 @@ Unpack it and put `github-pr-check` (`github-pr-check.exe` on Windows) somewhere
 
 - **Linux / macOS:** if needed, make it executable with `chmod +x github-pr-check`.
 
-#### macOS: allowing the app to run
+#### macOS: allowing a downloaded copy to run
 
-The binary isn't signed or notarized by Apple, so the first launch of a downloaded copy is blocked with a message like *"github-pr-check" Not Opened* or *Apple could not verify "github-pr-check" is free of malware*. Click **Done** (not *Move to Trash*), then allow it once:
+This only applies to an archive downloaded in a browser. Installs through Homebrew, mise or cargo aren't affected.
+
+<details>
+<summary>The binary isn't signed or notarized by Apple, so macOS blocks its first launch. How to allow it.</summary>
+
+The first launch shows a message like *"github-pr-check" Not Opened* or *Apple could not verify "github-pr-check" is free of malware*. Click **Done** (not *Move to Trash*), then allow it once:
 
 1. Open **System Settings → Privacy & Security**.
 2. Scroll down to the **Security** section. It shows *"github-pr-check" was blocked to protect your Mac.*
@@ -128,6 +138,8 @@ The **Open Anyway** button only appears for about an hour after the blocked laun
 ```sh
 xattr -d com.apple.quarantine ./github-pr-check
 ```
+
+</details>
 
 ### Or build from source
 
