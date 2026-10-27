@@ -214,3 +214,7 @@ For each running GitHub Actions job, github-pr-check looks up the last 5 success
 | Dim text hard to read | github-pr-check uses your terminal's *bright black* colour for secondary text. Make it lighter in your terminal's colour scheme. |
 
 GitHub's API rate limits are not a concern at the default interval: one GraphQL request per refresh, plus a few REST calls only while CI is running.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

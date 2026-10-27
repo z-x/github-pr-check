@@ -3,6 +3,7 @@ name = "github-pr-check"
 version = "0.1.2"
 edition = "2021"
 description = "Terminal dashboard for the CI status of your open GitHub pull requests"
+license = "MIT"
 
 [dependencies]
 ratatui = "0.29"
