@@ -174,6 +174,23 @@ cargo run --release -- --once
 
 The workflow builds all five targets and creates a GitHub Release with the archives and `SHA256SUMS.txt`. To build without publishing, run the workflow manually from the Actions tab; the binaries then appear as artifacts of that run.
 
+### Publishing to winget
+
+Once set up, every release tag (except pre-releases like `v0.2.0-rc1`) also opens a pull request on [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs) updating the `z-x.GitHubPRCheck` package. A winget moderator merges it, usually within a few days.
+
+One-time setup:
+
+1. **Fork** https://github.com/microsoft/winget-pkgs to your account. The workflow pushes its branches there.
+2. **Submit the first version by hand**, since the automation can only update an existing package. Take the Windows zip URL of a release made by this workflow:
+   ```powershell
+   winget install wingetcreate
+   wingetcreate new https://github.com/z-x/github-pr-check/releases/download/v0.2.0/github-pr-check-v0.2.0-x86_64-pc-windows-msvc.zip
+   ```
+   Use `z-x.GitHubPRCheck` as the package identifier, and `github-pr-check` as the portable command alias. When it asks, let it submit the PR. Wait for it to be merged.
+3. **Create a classic token** with the `public_repo` scope (https://github.com/settings/tokens/new) and add it as a repository secret named `WINGET_TOKEN` (Settings → Secrets and variables → Actions).
+
+Until the secret exists, the *Submit to winget* job is skipped.
+
 ## How the estimates work
 
 For each running GitHub Actions job, github-pr-check looks up the last 5 successful runs of the same workflow and takes the **median duration of the job with the same name**. Elapsed time against that median gives the `~62% · 1m10s left` shown in the details pane. The **ETA** column shows when the slowest running job of the PR should finish.
