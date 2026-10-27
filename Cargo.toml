@@ -4,6 +4,21 @@ version = "0.1.2"
 edition = "2021"
 description = "Terminal dashboard for the CI status of your open GitHub pull requests"
 license = "MIT"
+repository = "https://github.com/z-x/github-pr-check"
+readme = "README.md"
+keywords = ["github", "pull-requests", "ci", "tui", "github-actions"]
+categories = ["command-line-utilities", "development-tools"]
+include = ["/src", "/README.md", "/LICENSE"]
+
+# `cargo binstall github-pr-check` downloads the release archive instead of compiling.
+[package.metadata.binstall]
+pkg-url = "{ repo }/releases/download/v{ version }/{ name }-v{ version }-{ target }{ archive-suffix }"
+pkg-fmt = "tgz"
+bin-dir = "{ name }-v{ version }-{ target }/{ bin }{ binary-ext }"
+
+[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
+pkg-fmt = "zip"
+bin-dir = "{ bin }{ binary-ext }"
 
 [dependencies]
 ratatui = "0.29"

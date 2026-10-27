@@ -2,7 +2,7 @@
 
 A terminal dashboard showing the CI status of **your open GitHub pull requests**, refreshed automatically.
 
-![GitHub PR Check listing three open pull requests with live CI progress, one failing and showing its per-check breakdown](preview.png)
+![GitHub PR Check listing three open pull requests with live CI progress, one failing and showing its per-check breakdown](https://raw.githubusercontent.com/z-x/github-pr-check/main/preview.png)
 
 
 For every open PR you authored, in any repo or organization your token can see, it shows:
@@ -78,6 +78,22 @@ export GITHUB_PAT=ghp_yourTokenHere
 ```
 
 ## 3. Install
+
+### With a package manager
+
+**macOS / Linux ([Homebrew](https://brew.sh)):**
+```sh
+brew install z-x/tap/github-pr-check
+```
+Homebrew installs the same prebuilt binary as the Releases page, without the macOS *"Apple could not verify…"* prompt described below.
+
+**With Rust installed ([crates.io](https://crates.io/crates/github-pr-check)):**
+```sh
+cargo install github-pr-check     # builds from source
+cargo binstall github-pr-check    # downloads the prebuilt binary instead
+```
+
+With a package manager, use option B (an environment variable) for the token. The install location changes between versions, so a `.env` next to the executable would get lost on upgrade.
 
 ### Download a prebuilt binary
 
@@ -190,6 +206,18 @@ One-time setup:
 3. **Create a classic token** with the `public_repo` scope (https://github.com/settings/tokens/new) and add it as a repository secret named `WINGET_TOKEN` (Settings → Secrets and variables → Actions).
 
 Until the secret exists, the *Submit to winget* job is skipped.
+
+### Publishing to Homebrew
+
+Every release tag (except pre-releases) rewrites `Formula/github-pr-check.rb` in [z-x/homebrew-tap](https://github.com/z-x/homebrew-tap) using `.github/scripts/homebrew-formula.sh`, pointing at the new archives and checksums. Users get it with `brew upgrade`.
+
+One-time setup: create a **fine-grained token** (https://github.com/settings/personal-access-tokens/new) with access to only the `z-x/homebrew-tap` repository and the **Contents: Read and write** permission. Add it as a repository secret named `HOMEBREW_TAP_TOKEN`. Until the secret exists, the *Update Homebrew tap* job is skipped.
+
+### Publishing to crates.io
+
+Every release tag (except pre-releases) runs `cargo publish`, after checking that the `Cargo.toml` version matches the tag. It uses crates.io [trusted publishing](https://crates.io/docs/trusted-publishing), so no token is stored.
+
+One-time setup, after the first version was published by hand with `cargo publish`: on https://crates.io/crates/github-pr-check/settings, add a trusted publisher with owner `z-x`, repository `github-pr-check` and workflow `release.yml`.
 
 ## How the estimates work
 
